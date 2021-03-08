@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - sb_test
     tags:
       - 'v*'
   pull_request:
