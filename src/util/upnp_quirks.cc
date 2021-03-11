@@ -82,7 +82,7 @@ void Quirks::restoreSamsungBookMarkedPosition(const std::shared_ptr<CdsItem>& it
     auto positionToRestore = item->getBookMarkPos();
     if (positionToRestore > 10)
         positionToRestore -= 10;
-    log_info("restoreSamsungBookMarkedPosition: Title [{}] positionToRestore [{}] sec", item->getTitle(), positionToRestore);
+    log_info("restoreSamsungBookMarkedPosition: Client [{}] Title [{}] positionToRestore [{}] sec", pClientInfo->match, item->getTitle(), positionToRestore);
 
     if (pClientInfo->flags & QUIRK_FLAG_SAMSUNG_BOOKMARK_MSEC)
         positionToRestore *= 1000;
@@ -103,7 +103,7 @@ void Quirks::saveSamsungBookMarkedPosition(const std::unique_ptr<ActionRequest>&
         auto categoryType = req_root.child("CategoryType").text().as_string();
         auto rID = req_root.child("RID").text().as_string();
 
-        log_info("saveSamsungBookMarkedPosition: ObjectID [{}] PosSecond [{}] CategoryType [{}] RID [{}]", objectID, bookMarkPos, categoryType, rID);
+        log_info("saveSamsungBookMarkedPosition: Client [{}] ObjectID [{}] PosSecond [{}] CategoryType [{}] RID [{}]", pClientInfo->match, objectID, bookMarkPos, categoryType, rID);
 
         std::map<std::string, std::string> m = {
             { "bookmarkpos", bookMarkPos },
