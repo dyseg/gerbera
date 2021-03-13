@@ -169,6 +169,10 @@ public:
         std::vector<int>& updateID, const std::map<std::string, std::string>& lastMetadata)
         = 0;
 
+    virtual void addOrUpdateBookMark(std::string itemId, std::string client, unsigned int bookmarkPosition) = 0;
+    virtual unsigned int getBookMark(unsigned int itemId, std::string client) = 0;
+    virtual void deleteBookMark(unsigned int itemId, std::string client) = 0;
+
     /// \brief Builds the container path. Fetches the path of the
     /// parent and adds the title
     /// \param parentID the parent id of the parent container

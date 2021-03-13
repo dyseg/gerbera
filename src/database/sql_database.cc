@@ -1666,6 +1666,38 @@ void SQLDatabase::updateConfigValue(const std::string& key, const std::string& i
     }
 }
 
+void SQLDatabase::addOrUpdateBookMark(std::string itemId, std::string client, unsigned int bookmarkPosition)
+{
+    std::ostringstream aou;
+    aou << "insert or replace into " << TQ(BOOKMARK_TABLE) << "(id, client, bookmark_pos, item_id) VALUES("
+        << "(select id from " << TQ(BOOKMARK_TABLE) << " where client='" << client << "' and item_id=" << itemId << "),"
+        << "'" << client << "',"
+        << bookmarkPosition << ","
+        << itemId << ");";
+    exec(aou.str());
+}
+
+unsigned int SQLDatabase::getBookMark(unsigned int itemId, std::string client)
+{
+    std::ostringstream sel;
+    sel << "select bookmark_pos from " << TQ(BOOKMARK_TABLE)
+        << " where " << TQ(BOOKMARK_TABLE) << ".client='" << client << "' and " << TQ(BOOKMARK_TABLE) << ".item_id=" << itemId << ";";
+    auto res = select(sel.str());
+
+    std::unique_ptr<SQLRow> row;
+    if (res != nullptr && (row = res->nextRow()) != nullptr) {
+        return stoiString(row->col(0));
+    }
+    return 0;
+}
+
+void SQLDatabase::deleteBookMark(unsigned int itemId, std::string client)
+{
+    std::ostringstream del;
+    del << "DELTE FROM " << TQ(BOOKMARK_TABLE) << " WHERE itemId=" << itemId << " AND client='" << client << "';";
+    exec(del.str());
+}
+
 void SQLDatabase::updateAutoscanList(ScanMode scanmode, std::shared_ptr<AutoscanList> list)
 {
 

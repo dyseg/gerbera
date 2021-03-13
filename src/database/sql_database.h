@@ -50,6 +50,7 @@ class SQLEmitter;
 #define AUTOSCAN_TABLE "mt_autoscan"
 #define METADATA_TABLE "mt_metadata"
 #define CONFIG_VALUE_TABLE "grb_config_value"
+#define BOOKMARK_TABLE "mt_bookmark"
 
 class SQLRow {
 public:
@@ -156,6 +157,10 @@ public:
     void updateConfigValue(const std::string& key, const std::string& item, const std::string& value, const std::string& status = "unchanged") override;
 
     std::unique_ptr<std::vector<int>> getPathIDs(int objectID) override;
+
+    void addOrUpdateBookMark(std::string itemId, std::string client, unsigned int bookmarkPosition) override;
+    unsigned int getBookMark(unsigned int itemId, std::string client) override;
+    void deleteBookMark(unsigned int itemId, std::string client) override;
 
     void shutdown() override;
     virtual void shutdownDriver() = 0;
