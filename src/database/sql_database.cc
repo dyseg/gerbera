@@ -1666,15 +1666,45 @@ void SQLDatabase::updateConfigValue(const std::string& key, const std::string& i
     }
 }
 
-void SQLDatabase::addOrUpdateBookMark(std::string itemId, std::string client, unsigned int bookmarkPosition)
+void SQLDatabase::updateBookMark(std::string itemId, std::string client, unsigned int bookmarkPosition)
 {
-    std::ostringstream aou;
-    aou << "insert or replace into " << TQ(BOOKMARK_TABLE) << "(id, client, bookmark_pos, item_id) VALUES("
-        << "(select id from " << TQ(BOOKMARK_TABLE) << " where client='" << client << "' and item_id=" << itemId << "),"
-        << "'" << client << "',"
-        << bookmarkPosition << ","
-        << itemId << ");";
-    exec(aou.str());
+    std::ostringstream query;
+    query << "SELECT "
+          << TQ("id")
+          << " FROM "
+          << TQ(BOOKMARK_TABLE)
+          << " WHERE "
+          << TQ("client") << '=' quote(client)
+          << " AND "
+          << TQ("item_id") << '=' << quote(itemId);
+    auto res = select(query);
+    std::unique_ptr<SQLRow> row;
+    if (res == nullptr || (row = res->nextRow()) == nullptr) {
+        std::ostringstream insert;
+        insert << "INSERT INTO "
+               << TQ(BOOKMARK_TABLE)
+               << " ("
+               << TQ("client") << ','
+               << TQ("bookmark_pos") << ','
+               << TQ("item_id") << ','
+               << ") VALUES ("
+               << quote(client) << ','
+               << quote(bookmarkPosition) << ','
+               << quote(itemId) << ','
+               << ')';
+        exec(insert.str());
+        log_debug("inserted boorkmark for client {} and item {} with value {} sec", client, item, bookmarkPosition);
+    } else {
+        std::ostringstream update;
+        update << "UPDATE "
+               << TQ(BOOKMARK_TABLE)
+               << " SET "
+               << TQ("bookmark_pos") '=' quote(bookmarkPosition)
+               << " WHERE "
+               << TQ("id") << '=' row->col(0));
+        exec(update.str());
+        log_debug("updated boorkmark for client {} and item {} with value {} sec", client, item, bookmarkPosition);
+    }
 }
 
 unsigned int SQLDatabase::getBookMark(unsigned int itemId, std::string client)
