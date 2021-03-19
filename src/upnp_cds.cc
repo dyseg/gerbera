@@ -119,8 +119,10 @@ void ContentDirectoryService::doBrowse(const std::unique_ptr<ActionRequest>& req
 
             obj->setTitle(title);
         }
-
-        xmlBuilder->renderObject(obj, stringLimit, &didl_lite_root, request->getQuirks());
+        if(flag & BROWSE_DIRECT_CHILDREN)            
+            xmlBuilder->renderObject(obj, stringLimit, &didl_lite_root, nullptr);
+        else
+            xmlBuilder->renderObject(obj, stringLimit, &didl_lite_root, request->getQuirks());
     }
 
     std::ostringstream buf;
