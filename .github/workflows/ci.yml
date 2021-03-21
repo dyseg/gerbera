@@ -2,7 +2,7 @@ name: CI validation
 
 on:
   push:
-    branches: [master]
+    branches: [master, run_actions]
   pull_request:
     branches: [master]
 
