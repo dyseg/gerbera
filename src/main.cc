@@ -37,7 +37,7 @@
 #include <csignal>
 #include <filesystem>
 #include <mutex>
-#include <spdlog/sinks/basic_file_sink.h>
+#include <spdlog/sinks/rotating_file_sink.h>
 
 #include <upnpconfig.h>
 #ifdef UPNP_HAVE_TOOLS
@@ -208,8 +208,8 @@ int main(int argc, char** argv, char** envp)
 
         std::optional<std::string> logfile;
         if (opts.count("logfile") > 0) {
-            auto file_logger = spdlog::basic_logger_mt("basic_logger", opts["logfile"].as<std::string>());
-            spdlog::set_default_logger(file_logger);
+            auto rotating_file_logger = spdlog::rotating_logger_mt("basic_logger", opts["logfile"].as<std::string>(), 1048576 * 100, 10);
+            spdlog::set_default_logger(rotating_file_logger);
             spdlog::flush_on(spdlog::level::trace);
         }
 
