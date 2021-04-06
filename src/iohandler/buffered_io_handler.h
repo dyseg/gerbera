@@ -36,8 +36,8 @@
 #include <upnp.h>
 
 #include "common.h"
-#include "io_handler_buffer_helper.h"
 #include "content/playhook_handler.h"
+#include "io_handler_buffer_helper.h"
 
 /// \brief a IOHandler with buffer support
 /// the buffer is only for read(). write() is not supported

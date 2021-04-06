@@ -63,7 +63,7 @@ void FileIOHandler::open(enum UpnpOpenFileMode mode)
         f = ::fopen(filename.c_str(), "rb");
 #endif
         fileSize = fs::file_size(filename);
-	log_info("fileSize={}", fileSize);
+        log_info("fileSize={}", fileSize);
     } else {
         throw_std_runtime_error("open: UpnpOpenFileMode mode not supported");
     }
