@@ -35,8 +35,9 @@
 
 #include "config/config_manager.h"
 
-IOHandlerBufferHelper::IOHandlerBufferHelper(std::shared_ptr<Config> config, size_t bufSize, size_t initialFillSize)
+IOHandlerBufferHelper::IOHandlerBufferHelper(std::shared_ptr<Config> config, size_t bufSize, size_t initialFillSize, std::unique_ptr<PlayHookHandler> frhf)
     : config(std::move(config))
+    , frhf(std::move(frhf))
 {
     if (bufSize == 0)
         throw_std_runtime_error("bufSize must be greater than 0");
@@ -95,8 +96,13 @@ size_t IOHandlerBufferHelper::read(char* buf, size_t length)
 
     if (readError || threadShutdown)
         return -1;
-    if (empty && eof)
+    if (empty && eof) {
+        if (!once) {
+            once = true;
+            (*frhf)();
+        }
         return 0;
+    }
 
     size_t bLocal = b;
     lock.unlock();
@@ -137,6 +143,13 @@ size_t IOHandlerBufferHelper::read(char* buf, size_t length)
     }
 
     posRead += didRead;
+    log_info("posRead={:.2f} MB", posRead / 1048576.0);
+    if (!once && frhf != nullptr) {
+        if (posRead > 30 * 1048576) {
+            once = true;
+            (*frhf)();
+        }
+    }
     return didRead;
 }
 

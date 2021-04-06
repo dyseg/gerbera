@@ -170,9 +170,9 @@ std::unique_ptr<IOHandler> URLRequestHandler::open(const char* filename, enum Up
     }
 
     ///\todo make curl io handler configurable for url request handler
-    auto io_handler = std::make_unique<CurlIOHandler>(config, url, nullptr, 1024 * 1024, 0);
+    auto frhf = std::make_unique<PlayHookHandler>(content, obj);
+    auto io_handler = std::make_unique<CurlIOHandler>(config, url, nullptr, 1024 * 1024, 0, std::move(frhf));
     io_handler->open(mode);
-    content->triggerPlayHook(obj);
     return io_handler;
 }
 

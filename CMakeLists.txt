@@ -108,6 +108,8 @@ add_library(libgerbera STATIC
         src/content/onlineservice/task_processor.cc
         src/content/onlineservice/task_processor.h
         src/content/scripting/import_script.cc
+        src/content/playhook_handler.cc
+        src/content/playhook_handler.h
         src/content/scripting/import_script.h
         src/content/scripting/js_functions.cc
         src/content/scripting/js_functions.h

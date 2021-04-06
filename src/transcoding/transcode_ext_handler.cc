@@ -135,10 +135,11 @@ std::unique_ptr<IOHandler> TranscodeExternalHandler::serveContent(std::shared_pt
 
             try {
                 chmod(location.c_str(), S_IWUSR | S_IRUSR);
-
+                auto frhf = std::make_unique<PlayHookHandler>(content, obj);
                 std::unique_ptr<IOHandler> c_ioh = std::make_unique<CurlIOHandler>(config, url, nullptr,
                     config->getIntOption(CFG_EXTERNAL_TRANSCODING_CURL_BUFFER_SIZE),
-                    config->getIntOption(CFG_EXTERNAL_TRANSCODING_CURL_FILL_SIZE));
+                    config->getIntOption(CFG_EXTERNAL_TRANSCODING_CURL_FILL_SIZE),
+                    std::move(frhf));
                 std::unique_ptr<IOHandler> p_ioh = std::make_unique<ProcessIOHandler>(content, location, nullptr);
                 auto ch = std::make_shared<IOHandlerChainer>(c_ioh, p_ioh, 16384);
                 auto pr_item = std::make_shared<ProcListItem>(ch);
@@ -191,11 +192,10 @@ std::unique_ptr<IOHandler> TranscodeExternalHandler::serveContent(std::shared_pt
         main_proc->removeFile(location);
     }
 
-    content->triggerPlayHook(obj);
-
     std::unique_ptr<IOHandler> u_ioh = std::make_unique<ProcessIOHandler>(content, fifo_name, main_proc, proc_list);
+    auto frhf = std::make_unique<PlayHookHandler>(content, obj);
     auto io_handler = std::make_unique<BufferedIOHandler>(
         config, u_ioh,
-        profile->getBufferSize(), profile->getBufferChunkSize(), profile->getBufferInitialFillSize());
+        profile->getBufferSize(), profile->getBufferChunkSize(), profile->getBufferInitialFillSize(), std::move(frhf));
     return io_handler;
 }

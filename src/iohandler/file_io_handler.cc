@@ -41,6 +41,13 @@ FileIOHandler::FileIOHandler(fs::path filename)
 {
 }
 
+FileIOHandler::FileIOHandler(fs::path filename, std::unique_ptr<PlayHookHandler> frhf)
+    : filename(std::move(filename))
+    , f(nullptr)
+    , frhf(std::move(frhf))
+{
+}
+
 FileIOHandler::~FileIOHandler()
 {
     if (f != nullptr)
@@ -55,6 +62,8 @@ void FileIOHandler::open(enum UpnpOpenFileMode mode)
 #else
         f = ::fopen(filename.c_str(), "rb");
 #endif
+        fileSize = fs::file_size(filename);
+	log_info("fileSize={}", fileSize);
     } else {
         throw_std_runtime_error("open: UpnpOpenFileMode mode not supported");
     }
@@ -69,12 +78,23 @@ size_t FileIOHandler::read(char* buf, size_t length)
     size_t ret = 0;
 
     ret = fread(buf, sizeof(char), length, f);
-
+    totalReadAmount += ret;
     if (ret == 0) {
         if (feof(f))
             return 0;
         if (ferror(f))
             return -1;
+    }
+    auto totalPercent = totalReadAmount / (fileSize / 100.0) + 0.5;
+    if (((int)(totalPercent)) != lastPercent) {
+        lastPercent = totalPercent;
+        log_info("played {}% of '{}'", lastPercent, filename.c_str());
+        if (!once) {
+            if (totalPercent >= 10 && frhf != nullptr) {
+                once = true;
+                (*frhf)();
+            }
+        }
     }
 
     return ret;

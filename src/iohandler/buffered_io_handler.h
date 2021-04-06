@@ -37,6 +37,7 @@
 
 #include "common.h"
 #include "io_handler_buffer_helper.h"
+#include "content/playhook_handler.h"
 
 /// \brief a IOHandler with buffer support
 /// the buffer is only for read(). write() is not supported
@@ -50,7 +51,7 @@ public:
     /// \param initialFillSize the number of bytes which have to be in the buffer
     /// before the first read at the very beginning or after a seek returns;
     /// 0 disables the delay
-    BufferedIOHandler(std::shared_ptr<Config> config, std::unique_ptr<IOHandler>& underlyingHandler, size_t bufSize, size_t maxChunkSize, size_t initialFillSize);
+    BufferedIOHandler(std::shared_ptr<Config> config, std::unique_ptr<IOHandler>& underlyingHandler, size_t bufSize, size_t maxChunkSize, size_t initialFillSize, std::unique_ptr<PlayHookHandler> frhf);
 
     void open(enum UpnpOpenFileMode mode) override;
     void close() override;

@@ -36,6 +36,7 @@
 namespace fs = std::filesystem;
 
 #include "common.h"
+#include "content/playhook_handler.h"
 #include "io_handler.h"
 
 /// \brief Allows the web server to read from a file.
@@ -46,10 +47,16 @@ protected:
 
     /// \brief Handle of the file.
     FILE* f;
+    std::unique_ptr<PlayHookHandler> frhf;
+    uintmax_t totalReadAmount = 0;
+    uintmax_t fileSize;
+    int lastPercent;
+    bool once;
 
 public:
     /// \brief Sets the filename to work with.
     explicit FileIOHandler(fs::path filename);
+    explicit FileIOHandler(fs::path filename, std::unique_ptr<PlayHookHandler> frhf);
     ~FileIOHandler();
 
     /// \brief Opens file for reading (writing is not supported)

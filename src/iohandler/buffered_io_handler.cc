@@ -36,9 +36,10 @@
 #include "util/tools.h"
 
 class Config;
+class PlayHookHandler;
 
-BufferedIOHandler::BufferedIOHandler(std::shared_ptr<Config> config, std::unique_ptr<IOHandler>& underlyingHandler, size_t bufSize, size_t maxChunkSize, size_t initialFillSize)
-    : IOHandlerBufferHelper(std::move(config), bufSize, initialFillSize)
+BufferedIOHandler::BufferedIOHandler(std::shared_ptr<Config> config, std::unique_ptr<IOHandler>& underlyingHandler, size_t bufSize, size_t maxChunkSize, size_t initialFillSize, std::unique_ptr<PlayHookHandler> frhf)
+    : IOHandlerBufferHelper(std::move(config), bufSize, initialFillSize, std::move(frhf))
 {
     if (underlyingHandler == nullptr)
         throw_std_runtime_error("underlyingHandler must not be nullptr");

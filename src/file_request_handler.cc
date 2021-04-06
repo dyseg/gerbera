@@ -284,9 +284,9 @@ std::unique_ptr<IOHandler> FileRequestHandler::open(const char* filename, enum U
         return io_handler;
     }
 
-    auto io_handler = std::make_unique<FileIOHandler>(path);
+    auto frhf = std::make_unique<PlayHookHandler>(content, obj);
+    auto io_handler = std::make_unique<FileIOHandler>(path, move(frhf));
     io_handler->open(mode);
-    content->triggerPlayHook(obj);
 
     log_debug("end");
     return io_handler;

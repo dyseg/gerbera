@@ -35,6 +35,7 @@
 #include <upnp.h>
 
 #include "common.h"
+#include "content/playhook_handler.h"
 #include "io_handler.h"
 #include "util/thread_runner.h"
 
@@ -51,7 +52,7 @@ public:
     /// \param initialFillSize the number of bytes which have to be in the buffer
     /// before the first read at the very beginning or after a seek returns;
     /// 0 disables the delay
-    IOHandlerBufferHelper(std::shared_ptr<Config> config, size_t bufSize, size_t initialFillSize);
+    IOHandlerBufferHelper(std::shared_ptr<Config> config, size_t bufSize, size_t initialFillSize, std::unique_ptr<PlayHookHandler> frhf);
     virtual ~IOHandlerBufferHelper() noexcept override;
 
     // inherited from IOHandler
@@ -62,6 +63,7 @@ public:
 
 protected:
     std::shared_ptr<Config> config;
+    std::unique_ptr<PlayHookHandler> frhf;
     size_t bufSize;
     size_t initialFillSize;
     char* buffer;
@@ -71,6 +73,7 @@ protected:
     bool waitForInitialFillSize;
     bool signalAfterEveryRead;
     bool checkSocket;
+    bool once;
 
     // buffer stuff..
     bool empty;
