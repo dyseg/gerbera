@@ -196,7 +196,7 @@ public:
     // returns nullptr if file does not exist or is ignored due to configuration
     std::shared_ptr<CdsObject> createObjectFromFile(const fs::directory_entry& dirEnt, bool followSymlinks, bool allow_fifo = false);
 
-    std::vector<std::shared_ptr<CdsObject>> lastOpened;
+    std::vector<int> lastOpened;
 #ifdef ONLINE_SERVICES
     /// \brief Creates a layout based from data that is obtained from an
     /// online service (like YouTube, SopCast, etc.)

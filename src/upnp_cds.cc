@@ -104,7 +104,10 @@ void ContentDirectoryService::doBrowse(const std::unique_ptr<ActionRequest>& req
 
     if (objectID == 0) {
         auto lastOpened = content->lastOpened;
-        arr.insert(arr.end(), lastOpened.begin(), lastOpened.end());
+        for(auto id: lastOpened) {
+            auto objj = database->loadObject(id);
+            arr.push_back(objj);
+        }
     }
 
     pugi::xml_document didl_lite;
