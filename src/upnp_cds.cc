@@ -36,7 +36,9 @@
 #include <vector>
 
 #include "config/config_manager.h"
+#include "content/content_manager.h"
 #include "database/database.h"
+#include "server.h"
 #include "util/upnp_quirks.h"
 
 ContentDirectoryService::ContentDirectoryService(const std::shared_ptr<Context>& context,
@@ -45,6 +47,7 @@ ContentDirectoryService::ContentDirectoryService(const std::shared_ptr<Context>&
     , stringLimit(stringLimit)
     , config(context->getConfig())
     , database(context->getDatabase())
+    , content(context->getServer()->getContent())
     , deviceHandle(deviceHandle)
     , xmlBuilder(xmlBuilder)
 {
@@ -97,6 +100,11 @@ void ContentDirectoryService::doBrowse(const std::unique_ptr<ActionRequest>& req
         arr = database->browse(param);
     } catch (const std::runtime_error& e) {
         throw UpnpException(UPNP_E_NO_SUCH_ID, "no such object");
+    }
+
+    if (objectID == 0) {
+        auto lastOpened = content->lastOpened;
+        arr.insert(arr.end(), lastOpened.begin(), lastOpened.end());
     }
 
     pugi::xml_document didl_lite;

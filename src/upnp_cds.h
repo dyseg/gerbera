@@ -99,6 +99,7 @@ protected:
 
     std::shared_ptr<Config> config;
     std::shared_ptr<Database> database;
+    std::shared_ptr<ContentManager> content;
 
     UpnpDevice_Handle deviceHandle;
     UpnpXMLBuilder* xmlBuilder;
