@@ -4,10 +4,19 @@ on:
   pull_request:
     branches:
       - master
+      - npupnp_minimal_build
+  push:
+    branches:
+      - master
+      - npupnp_minimal_build
 
 jobs:
   build:
     runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false
+      matrix:
+        upnp: [ {package: libupnp-dev, config_option: NO}, {package: libnpupnp-dev, config_option: YES}]
     container:
       image: alpine:3.13
     steps:
@@ -21,7 +30,7 @@ jobs:
             gcc \
             git \
             gtest-dev \
-            libupnp-dev \
+            ${{ matrix.upnp.package }} \
             make \
             pkgconf \
             pugixml-dev \
@@ -36,6 +45,7 @@ jobs:
         run: |
           cmake -S . -B build \
             -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+            -DWITH_NPUPNP=${{ matrix.upnp.config_option }} \
             -DWITH_AVCODEC=NO \
             -DWITH_CURL=NO \
             -DWITH_DEBUG=YES \
