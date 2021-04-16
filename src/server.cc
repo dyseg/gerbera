@@ -52,6 +52,7 @@
 #include "serve_request_handler.h"
 #include "util/mime.h"
 #include "util/upnp_clients.h"
+#include "util/upnp_headers.h"
 #include "web/pages.h"
 #include "web/session_manager.h"
 
@@ -525,6 +526,7 @@ int Server::registerVirtualDirCallbacks()
     log_debug("Setting UpnpVirtualDir GetInfoCallback");
     int ret = UpnpVirtualDir_set_GetInfoCallback([](const char* filename, UpnpFileInfo* info, const void* cookie, const void** requestCookie) -> int {
         try {
+            (*requestCookie) = new struct sockaddr_storage(*UpnpFileInfo_get_CtrlPtIPAddr(info));
             auto reqHandler = static_cast<const Server*>(cookie)->createRequestHandler(filename);
             std::string link = urlUnescape(filename);
             reqHandler->getInfo(link.c_str(), info);
