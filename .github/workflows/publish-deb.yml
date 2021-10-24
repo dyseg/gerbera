@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - sid_dbg
     tags:
       - v*
 
