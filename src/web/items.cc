@@ -46,7 +46,8 @@ Web::Items::Items(std::shared_ptr<ContentManager> content, std::shared_ptr<UpnpX
 /// \brief orocess request for item list in ui
 void Web::Items::process()
 {
-    checkRequest();
+    log_debug("start");
+        checkRequest();
 
     int parentID = intParam("parent_id");
     int start = intParam("start");

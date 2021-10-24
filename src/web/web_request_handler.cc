@@ -67,10 +67,11 @@ void WebRequestHandler::checkRequest(bool checkLogin)
 
     // check if the session parameter was supplied and if we have
     // a session with that id
-
+    log_debug("start. checkLogin={}", checkLogin);
     checkRequestCalled = true;
 
     std::string sid = param("sid");
+    log_debug("SID='{}'", sid);
     if (sid.empty())
         throw SessionException("no session id given");
 

@@ -113,6 +113,7 @@ std::shared_ptr<CdsObject> Web::AddObject::addUrl(int parentID, const std::share
 
 void Web::AddObject::process()
 {
+    log_debug("start");
     checkRequest();
 
     auto objType = std::string(param("obj_type"));

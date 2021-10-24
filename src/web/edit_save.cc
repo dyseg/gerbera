@@ -44,6 +44,7 @@ Web::EditSave::EditSave(std::shared_ptr<ContentManager> content)
 
 void Web::EditSave::process()
 {
+    log_debug("start");
     checkRequest();
 
     std::string objID = param("object_id");

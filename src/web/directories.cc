@@ -44,6 +44,7 @@ using dirInfo = std::pair<fs::path, bool>;
 
 void Web::Directories::process()
 {
+    log_debug("start");
     checkRequest();
 
     std::string parentID = param("parent_id");

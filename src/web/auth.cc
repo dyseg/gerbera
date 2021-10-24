@@ -132,6 +132,7 @@ void Web::Auth::process()
         }
         root.append_attribute("logged_in") = session->isLoggedIn();
     } else if (action == "logout") {
+        log_debug("logout start");
         checkRequest();
         std::string sid = param("sid");
         auto session = sessionManager->getSession(sid);
@@ -139,6 +140,7 @@ void Web::Auth::process()
             throw_std_runtime_error("illegal session id");
         sessionManager->removeSession(sid);
     } else if (action == "get_token") {
+        log_debug("get_tocken start");
         checkRequest(false);
 
         // sending token
@@ -146,6 +148,7 @@ void Web::Auth::process()
         session->put("token", token);
         root.append_child("token").append_child(pugi::node_pcdata).set_value(token.c_str());
     } else if (action == "login") {
+        log_debug("login start");
         checkRequest(false);
 
         // authentication

@@ -42,6 +42,7 @@ Web::Files::Files(std::shared_ptr<ContentManager> content)
 
 void Web::Files::process()
 {
+    log_debug("start");
     checkRequest();
 
     std::string parentID = param("parent_id");

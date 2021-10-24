@@ -30,6 +30,7 @@ import {Autoscan} from './gerbera-autoscan.module.js';
 import {Updates} from './gerbera-updates.module.js';
 
 const checkSID = () => {
+  console.log('checkSID');
   return $.ajax({
     url: GerberaApp.clientConfig.api,
     type: 'get',

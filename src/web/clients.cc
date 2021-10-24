@@ -46,6 +46,7 @@ static std::string secondsToString(const std::chrono::seconds& t)
 
 void Web::Clients::process()
 {
+    log_debug("start");
     checkRequest();
     auto root = xmlDoc->document_element();
 

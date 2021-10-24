@@ -40,6 +40,7 @@ Web::Tasks::Tasks(std::shared_ptr<ContentManager> content)
 
 void Web::Tasks::process()
 {
+    log_debug("start");
     checkRequest();
     std::string action = param("action");
     if (action.empty())

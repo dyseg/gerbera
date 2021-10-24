@@ -37,5 +37,6 @@
 
 void Web::VoidType::process()
 {
+    log_debug("start");
     checkRequest();
 }

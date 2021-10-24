@@ -33,6 +33,7 @@ import {Config} from './gerbera-config.module.js';
 
 export class App {
   constructor(clientConfig, serverConfig) {
+    console.log('init');
     this.clientConfig = clientConfig;
     this.serverConfig = serverConfig;
     this.loggedIn = false;
