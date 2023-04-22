@@ -54,7 +54,7 @@
     "karma-webpack": "^3.0.5",
     "lodash": "^4.17.21",
     "mkdirp": "^0.5.5",
-    "mocha": "^6.2.3",
+    "mocha": "^10.2.0",
     "popper.js": "^1.16.1",
     "rimraf": "^2.7.1",
     "selenium-webdriver": "^4.0.0-alpha.7",
